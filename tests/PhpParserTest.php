@@ -18,8 +18,7 @@ class PhpParserTest extends \PHPUnit\Framework\TestCase {
 $foo = 'bar';
 EOD;
 		$parser->parse($code);
-		$output = $parser->printFormatPreserving();
-		$this->assertEquals($code, $output);
+		$this->assertEquals($code, $parser->printFormatPreserving());
 	}
 
 	public function testParsingOfThisFile() {
