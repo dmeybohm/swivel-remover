@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Best\SwivelRemover;
 
@@ -9,28 +9,25 @@ use PhpParser\NodeVisitorAbstract;
 class SwivelRemover
 {
 	/**
-	 * Remove the swivel a file.
-	 *
-	 * @param ParsedCode $code
-	 * @param string $swivelToRemove
-	 * @param bool $removedValue
-	 * @return void
+	 * Remove the swivel from code
 	 */
-	public function remove(ParsedCode $code, string $swivelToRemove, bool $removedValue = true) : void
+	public function remove(ParsedCode $code, string $swivelToRemove, bool $removedValue = true): void
 	{
 		$code->traverse(new class($swivelToRemove, $removedValue) extends NodeVisitorAbstract {
 
-			const METHOD = 'returnValue';
+			private const METHOD = 'returnValue';
 
 			public $swivelToRemove;
 			public $removedValue;
 
-			public function __construct(string $swivelToRemove, bool $removedValue) {
+			public function __construct(string $swivelToRemove, bool $removedValue)
+			{
 				$this->swivelToRemove = $swivelToRemove;
 				$this->removedValue = $removedValue;
 			}
 
-			public function leaveNode(Node $node) {
+			public function leaveNode(Node $node)
+			{
 				if (!($node instanceof Node\Expr\MethodCall)) {
 					return null;
 				}
@@ -50,11 +47,10 @@ class SwivelRemover
 					return null;
 				}
 
-				// todo handle two arg version
-				if (count($node->args) !== 3) {
+				$argCount = count($node->args);
+				if ($argCount < 2 || $argCount > 3) {
 					return null;
 				}
-
 				if (!($node->args[0]->value instanceof Node\Scalar\String_)) {
 					return null;
 				}
@@ -62,10 +58,29 @@ class SwivelRemover
 					return null;
 				}
 
-				// Replace the method call with one of its arguments:
-				return $this->removedValue ? $node->args[1]->value : $node->args[2]->value;
+				return $argCount === 3 ? $this->handleThreeArgs($node) : $this->handleTwoArgs($node);
 			}
 
+			/**
+			 * Handle three args.
+			 */
+			private function handleThreeArgs(Node\Expr\MethodCall $method): Node
+			{
+				// Replace the method call with one of its arguments:
+				return $this->removedValue ? $method->args[1]->value : $method->args[2]->value;
+			}
+
+			/**
+			 * Handle two args.
+			 */
+			private function handleTwoArgs(Node\Expr\MethodCall $method): Node
+			{
+				// Replace the method call with one of its arguments:
+				if ($this->removedValue) {
+					return $method->args[1]->value;
+				}
+				return new Node\Expr\ConstFetch(new Node\Name('null'));
+			}
 		});
 	}
 }
