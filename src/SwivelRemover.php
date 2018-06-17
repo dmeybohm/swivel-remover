@@ -34,7 +34,7 @@ class SwivelRemover
 				if (!($node instanceof Node\Expr\MethodCall)) {
 					return null;
 				}
-				if ($node->name->name !== self::METHOD) {
+				if (!($node->name instanceof Node\Identifier) || $node->name->name !== self::METHOD) {
 					return null;
 				}
 				if (!($node->var instanceof Node\Expr\PropertyFetch)) {
