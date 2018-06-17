@@ -9,14 +9,14 @@ use PhpParser\NodeVisitorAbstract;
 class SwivelRemover
 {
 	/**
-	 * Remove the swivel from every file in the directory.
+	 * Remove the swivel a file.
 	 *
-	 * @param string $swivelToRemove
 	 * @param ParsedCode $code
+	 * @param string $swivelToRemove
 	 * @param bool $removedValue
 	 * @return void
 	 */
-	public function remove(string $swivelToRemove, ParsedCode $code, bool $removedValue = true) : void
+	public function remove(ParsedCode $code, string $swivelToRemove, bool $removedValue = true) : void
 	{
 		$code->traverse(new class($swivelToRemove, $removedValue) extends NodeVisitorAbstract {
 
@@ -50,7 +50,7 @@ class SwivelRemover
 					return null;
 				}
 
-				if (count($node->args) != 3) {
+				if (count($node->args) !== 3) {
 					return null;
 				}
 

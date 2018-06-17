@@ -11,13 +11,13 @@ class SwivelRemoverTest extends \PHPUnit\Framework\TestCase
 	{
 		$parser = new PhpParser();
 		$code = <<< 'EOD'
-<?php	
+<?php
 $x = $this->Swivel->returnValue('FooBar.Baz', true, false);
 $y = $this->Swivel->returnValue('FooBar.Baz.Poo', true, false);
 EOD;
 		$parsed = $parser->parse($code);
 		$swivelRemover = new SwivelRemover();
-		$swivelRemover->remove('FooBar.Baz', $parsed);
+		$swivelRemover->remove($parsed,'FooBar.Baz');
 		$expected = <<< 'EOD'
 <?php
 $x = true;
