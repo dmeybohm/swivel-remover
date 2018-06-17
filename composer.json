@@ -1,0 +1,15 @@
+{
+  "name": "dmeybohm/swivel-remover",
+  "description": "Swivel feature remover",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "David Meybohm",
+      "email": "dmeybohm@gmail.com"
+    }
+  ],
+  "require": {
+    "nikic/php-parser": "v4.0.2"
+  }
+}
