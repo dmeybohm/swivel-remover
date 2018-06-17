@@ -1,6 +1,6 @@
 <?php
 
-namespace Best;
+namespace Best\SwivelRemover;
 
 use PhpParser\Lexer;
 use PhpParser\NodeTraverser;
