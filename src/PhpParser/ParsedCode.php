@@ -45,6 +45,7 @@ class ParsedCode
 		}
 
 		$this->nodes = $this->getTraverser()->traverse($this->nodes);
+		$this->traverser = null;
 	}
 
 	private function getTraverser(): NodeTraverser

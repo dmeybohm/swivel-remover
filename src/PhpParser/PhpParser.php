@@ -12,7 +12,7 @@ class PhpParser
 	/**
 	 * Parse the code.
 	 */
-	public function parse(string $code) : ParsedCode
+	public function parse(string $code): ParsedCode
 	{
 		$lexer = new Lexer\Emulative([
 			'usedAttributes' => [
@@ -35,7 +35,7 @@ class PhpParser
 	/**
 	 * Print the code while preserving the format.
 	 */
-	public function output(ParsedCode $parsedCode) : string
+	public function output(ParsedCode $parsedCode): string
 	{
 		$printer = new PrettyPrinter\Standard();
 		return $printer->printFormatPreserving($parsedCode->nodes, $parsedCode->oldStatements, $parsedCode->oldTokens);
