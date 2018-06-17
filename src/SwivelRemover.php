@@ -18,17 +18,15 @@ class SwivelRemover
 	 */
 	public function remove(string $swivelToRemove, ParsedCode $code, bool $removedValue = true) : void
 	{
-		$code->traverse(new class($swivelToRemove, $code, $removedValue) extends NodeVisitorAbstract {
+		$code->traverse(new class($swivelToRemove, $removedValue) extends NodeVisitorAbstract {
 
 			const METHOD = 'returnValue';
 
 			public $swivelToRemove;
-			public $code;
 			public $removedValue;
 
-			public function __construct($swivelToRemove, $code, $removedValue) {
+			public function __construct(string $swivelToRemove, bool $removedValue) {
 				$this->swivelToRemove = $swivelToRemove;
-				$this->code = $code;
 				$this->removedValue = $removedValue;
 			}
 
@@ -62,6 +60,8 @@ class SwivelRemover
 				if ($node->args[0]->value->value !== $this->swivelToRemove) {
 					return null;
 				}
+
+				// Replace the method call with one of its arguments:
 				return $this->removedValue ? $node->args[1]->value : $node->args[2]->value;
 			}
 
