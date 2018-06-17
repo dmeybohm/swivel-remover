@@ -50,6 +50,7 @@ class SwivelRemover
 					return null;
 				}
 
+				// todo handle two arg version
 				if (count($node->args) !== 3) {
 					return null;
 				}
