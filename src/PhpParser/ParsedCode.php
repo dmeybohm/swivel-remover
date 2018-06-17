@@ -23,16 +23,35 @@ class ParsedCode
 	public $oldTokens;
 
 	/**
-	 * Traverse a node list.
-	 *
-	 * @param \PhpParser\NodeVisitor $visitor
-	 * @return void
+	 * @var NodeTraverser|null
 	 */
-	public function traverse(NodeVisitor $visitor)
-	{
-		$traverser = new NodeTraverser();
-		$traverser->addVisitor($visitor);
+	private $traverser = null;
 
-		$this->nodes = $traverser->traverse($this->nodes);
+	public function addVisitor(NodeVisitor $visitor): void
+	{
+		if ($this->traverser === null) {
+			$this->traverser = new NodeTraverser();
+		}
+		$this->traverser->addVisitor($visitor);
+	}
+
+	/**
+	 * Traverse a node list.
+	 */
+	public function traverse(NodeVisitor $visitor = null): void
+	{
+		if ($visitor !== null) {
+			$this->addVisitor($visitor);
+		}
+
+		$this->nodes = $this->getTraverser()->traverse($this->nodes);
+	}
+
+	private function getTraverser(): NodeTraverser
+	{
+		if ($this->traverser === null) {
+			$this->traverser = new NodeTraverser();
+		}
+		return $this->traverser;
 	}
 }
